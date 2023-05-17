@@ -1,134 +1,115 @@
-function generateQuiz(questions, quizContainer, resultsContainer, submitButton){
-
-	function showQuestions(questions, quizContainer){
-	}
-
-	function showResults(questions, quizContainer, resultsContainer){
-	}
-	showQuestions(questions, quizContainer);
-	submitButton.onclick = function(){
-		showResults(questions, quizContainer, resultsContainer);
-	}
-}
-var myQuestions = [
-	{
-		question: "What is 10/2?",
-		answers: {
-			a: '3',
-			b: '5',
-			c: '115'
-		},
-		correctAnswer: 'b'
-	},
-	{
-		question: "What is 30/3?",
-		answers: {
-			a: '3',
-			b: '5',
-			c: '10'
-		},
-		correctAnswer: 'c'
-	}
-	{
-		question: "What is 300/3?",
-		answers: {
-			a: '3',
-			b: '5',
-			c: '100'
-		},
-		correctAnswer: 'c'
-	}
-	{
-		question: "What is 2*56?",
-		answers: {
-			a: '3',
-			b: '5',
-			c: '112'
-		},
-		correctAnswer: 'c'
-	}
-{
-		question: "What is 500*4?",
-		answers: {
-			a: '2000',
-			b: '5',
-			c: '2100'
-		},
-		correctAnswer: 'a'
-	}
-{
-		question: "What is 9*0?",
-		answers: {
-			a: '3',
-			b: '0',
-			c: '10'
-		},
-		correctAnswer: 'b'
-	}
-{
-		question: "What is 30/30?",
-		answers: {
-			a: '1',
-			b: '5',
-			c: '10'
-		},
-		correctAnswer: 'a'
-	}
+const quizData = [
+    {
+        question: "Which language runs in a web browser?",
+        a: "Java",
+        b: "C",
+        c: "Python",
+        d: "javascript",
+        correct: "d",
+    },
+    {
+        question: "What does CSS stand for?",
+        a: "Central Style Sheets",
+        b: "Cascading Style Sheets",
+        c: "Cascading Simple Sheets",
+        d: "Cars SUVs Sailboats",
+        correct: "b",
+    },
+    {
+        question: "What does HTML stand for?",
+        a: "Hypertext Markup Language",
+        b: "Hypertext Markdown Language",
+        c: "Hyperloop Machine Language",
+        d: "Helicopters Terminals Motorboats Lamborginis",
+        correct: "a",
+    },
+    {
+        question: "What year was JavaScript launched?",
+        a: "1996",
+        b: "1995",
+        c: "1994",
+        d: "none of the above",
+        correct: "b",
+    },
+    {
+        question: "which one is odd?",
+        a: "html",
+        b: "css",
+        c: "javascript",
+        d: "dns",
+        correct: "d",
+    },
+    {
+        question: "what is the first name of internet",
+        a: "arpanet",
+        b: "ethrnet",
+        c: "www",
+        d: "none of the above",
+        correct: "a",
+    },
+    {
+        question: "what is the fire internet web browser",
+        a: "silk browser ",
+        b: "mozilla",
+        c: "internet explorer",
+        d: "none of the above",
+        correct: "a",
+    },
+    {
+        question: "_____is a naming database in which internet domain names are located and translated into Internet Protocol (IP) addresses.",
+        a: "dns ",
+        b: "ip adress",
+        c: "internet explorer",
+        d: "tcp/ip",
+        correct: "a",
+    },
 ];
-function showQuestions(questions, quizContainer){
-	var output = [];
-	var answers;
-	for(var i=0; i<questions.length; i++){
-		
-	
-		answers = [];
-
-		for(letter in questions[i].answers){
-
-		
-			answers.push(
-				'<label>'
-					+ '<input type="radio" name="question'+i+'" value="'+letter+'">'
-					+ letter + ': '
-					+ questions[i].answers[letter]
-				+ '</label>'
-			);
-		}
-
-	
-		output.push(
-			'<div class="question">' + questions[i].question + '</div>'
-			+ '<div class="answers">' + answers.join('') + '</div>'
-		);
-	}
-
-	quizContainer.innerHTML = output.join('');
+const quiz= document.getElementById('quiz')
+const answerEls = document.querySelectorAll('.answer')
+const questionEl = document.getElementById('question')
+const a_text = document.getElementById('a_text')
+const b_text = document.getElementById('b_text')
+const c_text = document.getElementById('c_text')
+const d_text = document.getElementById('d_text')
+const submitBtn = document.getElementById('submit')
+let currentQuiz = 0
+let score = 0
+loadQuiz()
+function loadQuiz() {
+    deselectAnswers()
+    const currentQuizData = quizData[currentQuiz]
+    questionEl.innerText = currentQuizData.question
+    a_text.innerText = currentQuizData.a
+    b_text.innerText = currentQuizData.b
+    c_text.innerText = currentQuizData.c
+    d_text.innerText = currentQuizData.d
 }
-function showResults(questions, quizContainer, resultsContainer){
-	var answerContainers = quizContainer.querySelectorAll('.answers');
-
-	var userAnswer = '';
-	var numCorrect = 0;
-	
-	for(var i=0; i<questions.length; i++){
-		userAnswer = (answerContainers[i].querySelector('input[name=question'+i+']:checked')||{}).value;
-		
-	
-		if(userAnswer===questions[i].correctAnswer){
-			
-			numCorrect++;
-			answerContainers[i].style.color = 'lightgreen';
-		}
-		
-		else{
-		
-			answerContainers[i].style.color = 'red';
-		}
-	}
-
-	// show number of correct answers out of total
-	resultsContainer.innerHTML = numCorrect + ' out of ' + questions.length;
+function deselectAnswers() {
+    answerEls.forEach(answerEl => answerEl.checked = false)
 }
-submitButton.onclick = function(){
-	showResults(questions, quizContainer, resultsContainer);
+function getSelected() {
+    let answer
+    answerEls.forEach(answerEl => {
+        if(answerEl.checked) {
+            answer = answerEl.id
+        }
+    })
+    return answer
 }
+submitBtn.addEventListener('click', () => {
+    const answer = getSelected()
+    if(answer) {
+       if(answer === quizData[currentQuiz].correct) {
+           score++
+       }
+       currentQuiz++
+       if(currentQuiz < quizData.length) {
+           loadQuiz()
+       } else {
+           quiz.innerHTML = `
+           <h2>You answered ${score}/${quizData.length} questions correctly</h2>
+           <button onclick="location.reload()">Reload</button>
+           `
+       }
+    }
+})
